@@ -1,21 +1,19 @@
-import java.util.ArrayList;
-import java.util.List;
+package jdbc;
 import java.sql.*;
 
-
-public class researcherDAO_JDBC implements researcherDAO {
+public class ProfessorDAO_JDBC implements ProfessorDAO {
 	
 	Connection dbConnection;
 
-	public researcherDAO_JDBC(Connection dbconn){
+	public ProfessorDAO_JDBC(Connection dbconn){
 		// JDBC driver name and database URL
  		//  Database credentials
 		dbConnection = dbconn;
 	}
 
 	@Override
-	public researcher getresearcherByKey(int studentId) {
-		researcher r = new researcher();
+	public Researcher getresearcherByKey(int studentId) {
+		Researcher r = new Researcher();
 		String sql;
 		Statement stmt = null;
 		
@@ -53,8 +51,6 @@ public class researcherDAO_JDBC implements researcherDAO {
 		// Add exception handling when there is no matching record
 		return r;
 	}
-
-	@Override
 	public void updateProjectKey(int studentId,int projectId,String key)
 	{
 		String sql;
@@ -117,16 +113,19 @@ public class researcherDAO_JDBC implements researcherDAO {
 	}
 	
 	@Override
+	
 	public void searchProj(String key)
 	{
 		String sql;
 		Statement stmt = null;
-		int projectCheck=0;
+		//int projectCheck=0;
 		try{
 			stmt = dbConnection.createStatement();
 			sql = "select distinct projectId from projectkey where keyword='"+key+"'";
-			//System.out.println(sql);
 			ResultSet rs = stmt.executeQuery(sql);
+			if(rs==null){
+				System.out.println("No project with such keyword found");
+			}
 			while(rs.next())
 			{
 				int id = rs.getInt("projectId");
@@ -137,7 +136,6 @@ public class researcherDAO_JDBC implements researcherDAO {
 				{
 					stmt2 = dbConnection.createStatement();
 					sql2 = "select * from project where projId="+id;
-					//System.out.println(sql2);
 					ResultSet rs2 = stmt2.executeQuery(sql2);
 					//ResultSetMetaData rsmd = rs2.getMetaData();
 					//int columnsNumber = rsmd.getColumnCount();
@@ -154,10 +152,6 @@ public class researcherDAO_JDBC implements researcherDAO {
 					System.out.println("VendorError: " + ex.getErrorCode());
 				}
 			}
-			if(rs==null)
-			{
-				System.out.println("No project with such keyword found");
-			}
 		}
 		catch (SQLException ex) {
 		    // handle any errors
@@ -167,21 +161,28 @@ public class researcherDAO_JDBC implements researcherDAO {
 		}
 	}
 			
-	/*public void addresearcher(Student student) {
+	public void addResearcher(Researcher r1) {
 		PreparedStatement preparedStatement = null;																																																																																																																																													
 		String sql;
-		sql = "insert into student(rollno, name) values (?,?)";
+		sql = "insert into researcher(studentID,fname, lname, loginid, address,sex, password, dept_num) values (?,?,?,?,?,?,?,?)";
 
 		try {
 			preparedStatement = dbConnection.prepareStatement(sql);
  
-			preparedStatement.setInt(1, student.getRollno());
-			preparedStatement.setString(2, student.getName());
+			preparedStatement.setInt(1, r1.getStudentId());
+			preparedStatement.setString(2, r1.getFname());
+			preparedStatement.setString(3, r1.getLname());
+			preparedStatement.setString(4, r1.getLoginid());
+			preparedStatement.setString(5, r1.getAddress());
+			preparedStatement.setString(6, String.valueOf(r1.getSex()));
+			preparedStatement.setString(7, r1.getPassword());
+			preparedStatement.setInt(8, r1.getDeptNo());
+			
  
 			// execute insert SQL stetement
 			preparedStatement.executeUpdate();
  
-			System.out.println("Student: Roll No " + student.getRollno() 
+			System.out.println("Researcher: Student ID " + r1.getStudentId() 
 				+ ", added to the database");
 		} catch (SQLException e) {
  			System.out.println(e.getMessage());
@@ -194,5 +195,31 @@ public class researcherDAO_JDBC implements researcherDAO {
 		} catch (SQLException e) {
  			System.out.println(e.getMessage());
  		}
-	}*/
+	}
+	public void deleteResearcher(Researcher r1) {
+		PreparedStatement preparedStatement = null;																																																																																																																																													
+		String sql;
+		sql = "delete from researcher where studentID = "+r1.getStudentId();
+
+		try {
+			preparedStatement = dbConnection.prepareStatement(sql);
+ 
+			// execute insert SQL stetement
+			preparedStatement.executeUpdate();
+ 
+			System.out.println("Researcher: Student ID " + r1.getStudentId() 
+				+ ", deleted from database");
+		} catch (SQLException e) {
+ 			System.out.println(e.getMessage());
+ 		}
+
+		try{
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+		} catch (SQLException e) {
+ 			System.out.println(e.getMessage());
+ 		}
+	}	
+	
 }

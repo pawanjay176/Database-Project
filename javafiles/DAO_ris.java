@@ -1,3 +1,5 @@
+package jdbc;
+
 import java.sql.*;
 public class DAO_ris {
 	public static void main(String[] args) {
@@ -6,8 +8,8 @@ public class DAO_ris {
 
 			daoFactory.activateConnection();
 
-			researcherDAO rdao = daoFactory.getresearcherDAO();
-			researcher r = rdao.getresearcherByKey(2);
+			ResearcherDAO rdao = daoFactory.getresearcherDAO();
+			Researcher r = rdao.getresearcherByKey(2);
 			r.print();
 			//rdao.updateProjectKey(2,1,"Data Structures");
 			rdao.searchProj("Algorithms");

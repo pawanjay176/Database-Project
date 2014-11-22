@@ -1,3 +1,5 @@
+package jdbc;
+
 import java.lang.*;
 import java.sql.*;
 /*
@@ -9,13 +11,13 @@ import java.sql.*;
 */
 public class DAO_Factory{
 	static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";  
-	static final String DB_URL = "jdbc:mysql://localhost/RIS";
+	static final String DB_URL = "jdbc:mysql://localhost/daoproject";
 	static final String USER = "root";
-	static final String PASS = "test";
+	static final String PASS = "Hallows";
 	Connection dbconnection = null;
 
 	// You can add additional DAOs here as needed
-	researcherDAO resDAO = null;
+	ResearcherDAO resDAO = null;
 
 	boolean activeConnection = false;
 
@@ -45,13 +47,13 @@ public class DAO_Factory{
 		    System.out.println("VendorError: " + ex.getErrorCode());
 		}
 	}
-	public researcherDAO getresearcherDAO() throws Exception
+	public ResearcherDAO getresearcherDAO() throws Exception
 	{
 		if( activeConnection == false )
 			throw new Exception("Connection not activated...");
 
 		if( resDAO == null )
-			resDAO = new researcherDAO_JDBC( dbconnection );
+			resDAO = new ResearcherDAO_JDBC( dbconnection );
 
 		return resDAO;
 	}

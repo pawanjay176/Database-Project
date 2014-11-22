@@ -1,7 +1,7 @@
-import java.lang.*;
+package jdbc;
+
 import java.util.ArrayList;
-import java.util.List;
-public class researcher {
+public class Researcher {
 	int studentId;
 	String fname;
 	String lname;
@@ -57,7 +57,7 @@ public class researcher {
 		return dept_num;
 	}
 	public void setDeptNo(int deptNo) {
-		this.dept_num = dept_num;
+		this.dept_num = deptNo;
 	}
 	public ArrayList<String> getSkills(){
 		return skills;
